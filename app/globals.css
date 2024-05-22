@@ -2,3 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        --color-ptv-network-grey: 51 52 52;
+        --color-ptv-mid-grey: 112 115 114;
+        --color-ptv-warm-grey: 215 210 203;
+        --color-ptv-train: 0 114 206;
+        --color-ptv-tram: 120 190 32;
+        --color-ptv-bus: 255 130 0;
+        --color-ptv-vline: 127 13 130;
+        --color-ptv-disruption: 254 80 0;
+        --color-ptv-myki: 194 216 64;
+    }
+  }
