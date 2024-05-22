@@ -1,8 +1,37 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
+
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const networkSans = localFont({
+  src: [
+    {
+      path: "./fonts/NETWORKSANS-2019-BOLD.ttf",
+      weight: "bold",
+      style: "normal",
+    },
+    {
+      path: "./fonts/NETWORKSANS-2019-REGULAR.ttf",
+      weight: "normal",
+      style: "normal",
+    },
+    {
+      path: "./fonts/NETWORKSANS-2019-REGULARITALIC.ttf",
+      weight: "normal",
+      style: "italic",
+    },
+    {
+      path: "./fonts/NETWORKSANS-2019-LIGHT.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/NETWORKSANS-2019-MEDIUM.ttf",
+      weight: "500",
+      style: "normal",
+    },
+  ],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +44,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className={networkSans.className}>
+      <body>{children}</body>
     </html>
   );
 }
