@@ -9,6 +9,8 @@ export enum RouteType {
   NightBus = 4,
 }
 
+export type PTVClient = ReturnType<typeof getPTVClient>
+
 export function getPTVClient() {
   const devid = process.env.PTV_DEVELOPER_ID!
   const apiKey = process.env.PTV_API_KEY!

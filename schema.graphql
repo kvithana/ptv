@@ -1,0 +1,126 @@
+type Query {
+  stop(id: ID!): Stop!
+  route(id: ID!): Route!
+}
+
+type Stop {
+  "The int32 ID of the stop converted to a string."
+  id: ID!
+  "The name of the stop."
+  stop_name: String
+  "The latitude of the stop."
+  stop_latitude: Float
+  "The longitude of the stop."
+  stop_longitude: Float
+  "Landmark or street the stop is located at."
+  stop_landmark: String
+  "The suburb the stop is located in."
+  stop_suburb: String
+  "Sequence of the stop on the route/run; return 0 when route_id or run_id not specified. Order ascendingly by this field (when non zero) to get physical order (earliest first) of stops on the route_id/run_id."
+  stop_sequence: Int
+}
+
+type Run {
+  "The int32 ID of the run converted to a string. Or the Alphanumeric trip/service run identifier"
+  id: ID!
+  "The related route for the run."
+  route: Route
+  route_type: RouteType
+  "Final stop of the run."
+  final_stop: Stop
+  "Name of the destination of run"
+  destination_name: String
+  "Status of metropolitan train run; returns 'scheduled' for other modes"
+  status: String
+  "Chronological sequence of the trip/service run on the route in direction. Order ascendingly by this field to get chronological order (earliest first) of runs with the same route_id and direction_id."
+  run_sequence: Int
+  "The number of remaining skipped/express stations for the run/service from a stop."
+  express_stop_count: Int
+  "Position of the trip/service run. Available for some Bus, Nightrider and Train runs. May be null."
+  vehicle_position: VehiclePosition
+  "Descriptor of the trip/service run. Only available for some runs. May be null. "
+  vehicle_descriptor: VehicleDescriptor
+  "JSON string array of the geopath of the route"
+  geopath: String
+  "Connection link between two runs"
+  interchange: Interchange
+}
+
+type VehiclePosition {
+  "Geographic coordinate of latitude of the vehicle when known. May be null. Only available for some bus runs."
+  latitude: Float
+  "Geographic coordinate of longitude of the vehicle when known. May be null. Only available for some bus runs."
+  longitude: Float
+  "CIS - Metro Train Vehicle Location Easting coordinate"
+  easting: Float
+  "CIS - Metro Train Vehicle Location Northing coordinate"
+  northing: Float
+  "CIS - Metro Train Vehicle Location Direction"
+  direction: String
+  "Compass bearing of the vehicle when known, clockwise from True North, i.e., 0 is North and 90 is East. May be null. Only available for some bus runs."
+  bearing: Float
+  "Supplier of vehicle position data."
+  supplier: String
+  "Date and time that the vehicle position data was supplied."
+  datetime_utc: String
+  "CIS - Metro Train Vehicle Location data expiry time"
+  expiry_time: String
+}
+
+type VehicleDescriptor {
+  "Operator name of the vehicle such as 'Metro Trains Melbourne', 'Yarra Trams', 'Ventura Bus Line', 'CDC' or 'Sita Bus Lines'. May be null/empty. Only available for train, tram, v/line and some bus runs."
+  operator: String
+  "Operator identifier of the vehicle such as '26094'. May be null/empty. Only available for some tram and bus runs."
+  id: String
+  "Indicator if vehicle has a low floor. May be null. Only available for some tram runs."
+  low_floor: Boolean
+  "Indicator if vehicle is air conditioned. May be null. Only available for some tram runs."
+  air_conditioned: Boolean
+  "Vehicle description such as '6 Car Comeng', '6 Car Xtrapolis', '3 Car Comeng', '6 Car Siemens', '3 Car Siemens'. May be null/empty. Only available for some metropolitan train runs."
+  description: String
+  "Supplier of vehicle descriptor data."
+  supplier: String
+  "The length of the vehicle. Applies to CIS - Metro Trains"
+  length: String
+}
+
+type Interchange {
+  run: Run
+  route: Route
+  stop: Stop
+  "Indicates whether the interchange information is shown to end users."
+  advertised: Boolean
+}
+
+type InterchangeRun {
+  "The run that a vehicle was previously on"
+  feeder: InterchangeRun
+  "The run that a vehicle will become"
+  distributor: InterchangeRun
+}
+
+type Route {
+  id: ID!
+  route_service_status: RouteServiceStatus
+  "The type of route."
+  route_type: RouteType
+  "The name of the route."
+  route_name: String
+  "Route number presented to public (nb. not route_id)"
+  route_number: String
+  "JSON string array of the geopath of the route"
+  geopath: String
+}
+
+type RouteServiceStatus {
+  description: String
+  timestamp: String
+}
+
+enum RouteType {
+  train
+  bus
+  tram
+  vline
+  night_bus
+}

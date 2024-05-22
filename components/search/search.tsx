@@ -22,7 +22,7 @@ function SearchStops({ stops }: { stops: SimplifiedStop[] }) {
   const options: IFuseOptions<SimplifiedStop> = {
     includeScore: true,
     includeMatches: true,
-    threshold: 0.2,
+    threshold: 0.1,
     keys: ["stop_name", "routes.route_name"],
     fieldNormWeight: 0.5,
   }

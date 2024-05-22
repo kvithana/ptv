@@ -1,0 +1,65 @@
+schema:
+  - schema.graphql
+
+documents:
+  - 'app/**/*.ts'
+  - 'app/**/*.tsx'
+
+generates:
+  lib/graph/__generated__/resolvers.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      contextType: ../resolvers/context#Context
+      useIndexSignature: true
+      enumsAsTypes: true
+      maybeValue: T | null | undefined
+      mappers: 
+        Route: ../resolvers/route/route#RouteResolveValue
+        Run: ../resolvers/run/run#RunResolveValue
+        Stop: ../resolvers/stop/stop#StopResolveValue
+
+
+  app/api/graphql/__generated__/schema.graphql:
+    plugins:
+      - schema-ast
+    config:
+      includeIntrospectionTypes: true
+
+  app/__generated__/types.ts:
+    plugins:
+      - typescript
+
+  app/__generated__/operations.ts:
+    plugins:
+      - named-operations-object
+    config:
+      identifierName: Operations
+
+  app/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: __generated__/types
+      folder: __generated__
+    plugins:
+      - typescript-operations
+      - typed-document-node
+
+config:
+  dedupeFragments: true
+  enumsAsConst: true
+  maybeValue: T | null
+  skipTypeNameForRoot: true
+  nonOptionalTypename: true
+  useTypeImports: true
+  useIndexSignature: true
+  avoidOptionals: false
+  dedupeOperationSuffix: true
+  omitOperationSuffix: false
+  exportFragmentSpreadSubTypes: true
+  preResolveTypes: true
+  namingConvention:
+    enumValues: keep
+  scalars:
+    ISODateString: string

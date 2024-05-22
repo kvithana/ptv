@@ -10,12 +10,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.4",
+    "@apollo/server": "^4.10.4",
+    "@as-integrations/next": "^3.0.0",
     "@vercel/kv": "^1.0.1",
     "date-fns": "^3.6.0",
     "fuse.js": "^7.0.0",
+    "graphql": "^16.8.1",
     "idb-keyval": "^6.2.1",
     "next": "14.2.3",
     "p-limit": "^4.0.0",
@@ -26,6 +31,15 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/named-operations-object": "^3.0.0",
+    "@graphql-codegen/near-operation-file-preset": "^3.0.0",
+    "@graphql-codegen/schema-ast": "^4.0.2",
+    "@graphql-codegen/typed-document-node": "^5.0.7",
+    "@graphql-codegen/typescript": "^4.0.7",
+    "@graphql-codegen/typescript-operations": "^4.2.1",
+    "@graphql-codegen/typescript-resolvers": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@types/node": "^20",
     "@types/ramda": "^0.30.0",
     "@types/react": "^18",
