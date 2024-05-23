@@ -8,7 +8,9 @@ export function SearchResult({ entry }: { entry: SimplifiedStop }) {
   return (
     <div className="flex items-center justify-between py-4 border-b border-gray-200 overflow-hidden">
       <div>
-        <h2 className="text-lg font-semibold">{entry.stop_name}</h2>
+        <h2 className="text-lg font-semibold">
+          {entry.stop_name} ({entry.stop_id})
+        </h2>
         <p className="text-sm text-gray-500">{entry.stop_suburb}</p>
 
         <div className="hidden bg-train bg-bus bg-vline bg-tram" />

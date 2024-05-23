@@ -19,7 +19,8 @@ generates:
         Route: ../resolvers/route/route#RouteResolveValue
         Run: ../resolvers/run/run#RunResolveValue
         Stop: ../resolvers/stop/stop#StopResolveValue
-
+        Disruption: ../resolvers/disruption/disruption#DisruptionResolveValue
+        Departure: ../resolvers/departure/departure#DepartureResolveValue
 
   app/api/graphql/__generated__/schema.graphql:
     plugins:
@@ -63,3 +64,4 @@ config:
     enumValues: keep
   scalars:
     ISODateString: string
+    ID: string

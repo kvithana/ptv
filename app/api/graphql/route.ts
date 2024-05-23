@@ -1,17 +1,11 @@
-import { resolvers } from "@/lib/graph/resolvers"
 import { createContext } from "@/lib/graph/resolvers/context"
+import { schema } from "@/lib/graph/schema"
 import { ApolloServer } from "@apollo/server"
 import { startServerAndCreateNextHandler } from "@as-integrations/next"
-import { readFileSync } from "fs"
 import { NextRequest } from "next/server"
 
-const typeDefs = readFileSync("schema.graphql", {
-  encoding: "utf-8",
-})
-
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   introspection: true,
 })
 

@@ -9,8 +9,8 @@ export default function Home() {
 }
 
 gql`
-  query Something($id: ID!) {
-    stop(id: $id) {
+  query Something($id: ID!, $routeType: RouteType!) {
+    stop(id: $id, routeType: $routeType) {
       id
     }
   }

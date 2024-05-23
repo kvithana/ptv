@@ -18,3 +18,18 @@ export function toRouteType(number?: number): RouteType | null {
       return null
   }
 }
+
+export function fromRouteType(routeType: RouteType): 0 | 1 | 2 | 3 | 4 {
+  switch (routeType) {
+    case "train":
+      return 0
+    case "tram":
+      return 1
+    case "bus":
+      return 2
+    case "vline":
+      return 3
+    default:
+      throw new Error(`Unknown route type: ${routeType}`)
+  }
+}

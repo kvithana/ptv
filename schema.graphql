@@ -1,6 +1,61 @@
 type Query {
-  stop(id: ID!): Stop!
+  stop(id: ID!, routeType: RouteType!): Stop!
   route(id: ID!): Route!
+  departures(stopId: ID!, routeType: RouteType!): DepartureResponse!
+  run(id: ID!): Run!
+}
+
+type DepartureResponse {
+  departures: [Departure!]!
+  disruptions: [Disruption!]!
+  routes: [Route!]!
+}
+
+type Departure {
+  id: ID!
+  "Scheduled (i.e. timetabled) departure time and date in ISO 8601 UTC format"
+  scheduled_departure_utc: ISODateString
+  "Real-time estimate of departure time and date in ISO 8601 UTC format"
+  estimated_departure_utc: ISODateString
+  "Real-time estimate of departure time and date in ISO 8601 UTC format"
+  at_platform: Boolean
+  "Platform number at stop (metropolitan train only; returns null for other modes)"
+  platform_number: String
+  "Flag indicating special condition for run (e.g. RR Reservations Required, GC Guaranteed Connection, DOO Drop Off Only, PUO Pick Up Only, MO Mondays only, TU Tuesdays only, WE Wednesdays only, TH Thursdays only, FR Fridays only, SS School days only; ignore E flag)"
+  flags: [String!]
+  "Chronological sequence for the departures in a run. Order ascendingly by this field to get chronological order (earliest first) of departures with the same run_ref. NOTE, this field is not always N+1 or N-1 of the previous or following departure. e.g 100, 200, 250, 300 instead of 1, 2, 3, 4"
+  departure_sequence: Int
+  "The related disruptions for the departure."
+  disruptions: [Disruption!]!
+  "The related route for the departure."
+  run: Run
+}
+
+type Disruption {
+  "Disruption information identifier"
+  id: ID!
+  "Headline title summarising disruption information"
+  title: String
+  "URL of relevant article on PTV website"
+  url: String
+  "Description of the disruption"
+  description: String
+  "Status of the disruption (e.g. 'Planned', 'Current')"
+  status: String
+  "Type of disruption"
+  disruption_type: String
+  "Date and time disruption information is published on PTV website, in ISO 8601 UTC format"
+  published_on: ISODateString
+  "Date and time disruption information was last updated by PTV, in ISO 8601 UTC format"
+  last_updated: ISODateString
+  "Date and time at which disruption begins, in ISO 8601 UTC format"
+  from_date: ISODateString
+  "Date and time at which disruption ends, in ISO 8601 UTC format (returns null if unknown)"
+  to_date: ISODateString
+  "Route relevant to a disruption (if applicable)"
+  routes: [Route!]
+  "Stop relevant to a disruption (if applicable)"
+  stops: [Stop!]
 }
 
 type Stop {
@@ -116,6 +171,8 @@ type RouteServiceStatus {
   description: String
   timestamp: String
 }
+
+scalar ISODateString
 
 enum RouteType {
   train
