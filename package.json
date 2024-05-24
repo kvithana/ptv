@@ -8,10 +8,11 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm codegen && next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "pnpm clean && graphql-codegen --config codegen.yml",
+    "clean": "del-cli \"dist/*\" \"**/*.generated.ts\""
   },
   "dependencies": {
     "@apollo/client": "^3.10.4",
@@ -45,6 +46,7 @@
     "@types/ramda": "^0.30.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "del-cli": "^5.1.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
