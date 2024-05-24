@@ -2,20 +2,13 @@ import { QueryResolvers } from "@/lib/graph/__generated__/resolvers"
 import { fromRouteType } from "../../route/route-type"
 
 export const stop: QueryResolvers["stop"] = async (value, args, ctx) => {
-  const departures = await ctx.client.v3.departuresGetForStop(
-    fromRouteType(args.routeType),
-    parseInt(args.id),
-    {
-      expand: ["Stop"],
-      max_results: 1,
-    }
+  const response = await ctx.loaders.stops.load(
+    [args.id, fromRouteType(args.routeType)].join(":")
   )
 
-  const stop = departures.data.stops?.[0]
-
-  if (!stop) {
-    throw new Error(`Stop with id ${args.id} not found`)
+  if (!response.stop) {
+    throw new Error("Stop not found")
   }
 
-  return stop
+  return response.stop
 }

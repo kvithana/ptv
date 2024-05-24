@@ -11,7 +11,7 @@ generates:
       - typescript
       - typescript-resolvers
     config:
-      contextType: ../resolvers/context#Context
+      contextType: ../context#Context
       useIndexSignature: true
       enumsAsTypes: true
       maybeValue: T | null | undefined

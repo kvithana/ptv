@@ -1,4 +1,5 @@
 import { QueryResolvers } from "@/lib/graph/__generated__/resolvers"
+import { V3DeparturesResponse } from "@/lib/ptv/client"
 import { fromRouteType } from "../../route/route-type"
 import { DepartureResolveValue } from "../departure"
 
@@ -16,9 +17,22 @@ export const departures: QueryResolvers["departures"] = async (
     }
   )
 
-  const { departures, stops, disruptions, runs, routes } = d.data
+  const { disruptions, routes } = d.data
 
-  const constructed =
+  return {
+    __typename: "DepartureResponse",
+    departures: buildDepartureResolveValue(d.data),
+    routes: routes ? Object.values(routes) : [],
+    disruptions: disruptions ? Object.values(disruptions) : [],
+  }
+}
+
+export function buildDepartureResolveValue(
+  res: V3DeparturesResponse
+): DepartureResolveValue[] {
+  const { departures, stops, disruptions, runs } = res
+
+  return (
     departures?.map(
       (departure): DepartureResolveValue => ({
         departure,
@@ -27,11 +41,5 @@ export const departures: QueryResolvers["departures"] = async (
         run: runs?.[departure.run_id!],
       })
     ) ?? []
-
-  return {
-    __typename: "DepartureResponse",
-    departures: constructed,
-    routes: routes ? Object.values(routes) : [],
-    disruptions: disruptions ? Object.values(disruptions) : [],
-  }
+  )
 }

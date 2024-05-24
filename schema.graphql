@@ -73,6 +73,10 @@ type Stop {
   stop_suburb: String
   "Sequence of the stop on the route/run; return 0 when route_id or run_id not specified. Order ascendingly by this field (when non zero) to get physical order (earliest first) of stops on the route_id/run_id."
   stop_sequence: Int
+  "The related routes for the stop."
+  routes: [Route!]
+  "The related departures for the stop."
+  departures: [Departure!]!
 }
 
 type Run {
@@ -165,6 +169,8 @@ type Route {
   route_number: String
   "JSON string array of the geopath of the route"
   geopath: String
+  "The related stops for the route."
+  stops: [Stop!]
 }
 
 type RouteServiceStatus {

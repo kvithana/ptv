@@ -15,14 +15,15 @@
     "clean": "del-cli \"dist/*\" \"**/*.generated.ts\""
   },
   "dependencies": {
-    "@apollo/client": "^3.10.4",
     "@apollo/server": "^4.10.4",
     "@as-integrations/next": "^3.0.0",
     "@graphql-tools/schema": "^10.0.3",
     "@vercel/kv": "^1.0.1",
+    "dataloader": "^2.2.2",
     "date-fns": "^3.6.0",
     "fuse.js": "^7.0.0",
     "graphql": "^16.8.1",
+    "graphql-request": "^7.0.1",
     "idb-keyval": "^6.2.1",
     "next": "14.2.3",
     "p-limit": "^4.0.0",

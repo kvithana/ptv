@@ -1,6 +1,9 @@
-import { gql } from "@apollo/client"
+import { fetcher } from "@/lib/graph/client"
+import { gql } from "graphql-request"
 
-export default function Home() {
+export default async function Home() {
+  const data = await fetcher()
+
   return (
     <div>
       <h1>Stop</h1>
@@ -9,9 +12,11 @@ export default function Home() {
 }
 
 gql`
-  query Something($id: ID!, $routeType: RouteType!) {
+  query ServerStopQuery($id: ID!, $routeType: RouteType!) {
     stop(id: $id, routeType: $routeType) {
       id
+      stop_name
+      stop_suburb
     }
   }
 `
