@@ -18,4 +18,4 @@ const fetcher = async (keys: readonly string[]): Promise<V3RouteResponse[]> => {
 
 export type RouteLoader = Dataloader<string, V3RouteResponse>
 
-export const routeLoader = new Dataloader(fetcher)
+export const routeLoader = () => new Dataloader(fetcher)

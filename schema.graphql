@@ -58,6 +58,27 @@ type Disruption {
   stops: [Stop!]
 }
 
+"Direction of a route."
+type Direction {
+  "Direction of travel identifier"
+  id: ID!
+  "The name of the direction."
+  direction_name: String
+  "The related route for the direction."
+  route: Route
+}
+
+"Direction of a stop on a route."
+type RouteStopDirection {
+  "The related stop for the direction."
+  stop: Stop
+  "The related direction for the stop."
+  direction: Direction
+  "The related departures for the stop."
+  departures(limit: Int): [Departure!]
+}
+
+"A stop on the network. Can be connected to many routes."
 type Stop {
   "The int32 ID of the stop converted to a string."
   id: ID!
@@ -74,9 +95,14 @@ type Stop {
   "Sequence of the stop on the route/run; return 0 when route_id or run_id not specified. Order ascendingly by this field (when non zero) to get physical order (earliest first) of stops on the route_id/run_id."
   stop_sequence: Int
   "The related routes for the stop."
-  routes: [Route!]
-  "The related departures for the stop."
-  departures: [Departure!]!
+  routes: [RouteStop!]
+}
+
+"A stop on a route."
+type RouteStop {
+  stop: Stop!
+  route: Route!
+  directions: [RouteStopDirection!]
 }
 
 type Run {
@@ -101,8 +127,6 @@ type Run {
   vehicle_descriptor: VehicleDescriptor
   "JSON string array of the geopath of the route"
   geopath: String
-  "Connection link between two runs"
-  interchange: Interchange
 }
 
 type VehiclePosition {
@@ -143,24 +167,8 @@ type VehicleDescriptor {
   length: String
 }
 
-type Interchange {
-  run: Run
-  route: Route
-  stop: Stop
-  "Indicates whether the interchange information is shown to end users."
-  advertised: Boolean
-}
-
-type InterchangeRun {
-  "The run that a vehicle was previously on"
-  feeder: InterchangeRun
-  "The run that a vehicle will become"
-  distributor: InterchangeRun
-}
-
 type Route {
   id: ID!
-  route_service_status: RouteServiceStatus
   "The type of route."
   route_type: RouteType
   "The name of the route."
@@ -170,12 +178,25 @@ type Route {
   "JSON string array of the geopath of the route"
   geopath: String
   "The related stops for the route."
-  stops: [Stop!]
+  stops: [RouteStop!]
+  "The related directions for the route."
+  directions: [RouteDirection!]
+  "Service status for the route (indicates disruptions)"
+  route_service_status: RouteServiceStatus
 }
 
 type RouteServiceStatus {
   description: String
-  timestamp: String
+  timestamp: ISODateString
+}
+
+type RouteDirection {
+  "The related direction for the route."
+  direction: Direction
+  "The related route for the direction."
+  route: Route
+  "The related stops for the direction."
+  stops: [RouteStop!]
 }
 
 scalar ISODateString

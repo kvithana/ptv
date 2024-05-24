@@ -22,4 +22,4 @@ const fetcher = async (keys: readonly string[]): Promise<V3StopResponse[]> => {
 
 export type StopLoader = Dataloader<string, V3StopResponse>
 
-export const stopLoader = new Dataloader(fetcher)
+export const stopLoader = () => new Dataloader(fetcher)

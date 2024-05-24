@@ -1,5 +1,4 @@
 import { V3RouteWithStatus } from "@/lib/ptv/client"
-import { ascend, sortWith } from "ramda"
 import { RouteResolvers } from "../../__generated__/resolvers"
 import { toRouteType } from "./route-type"
 
@@ -19,23 +18,19 @@ export const Route: RouteResolvers = {
       : null,
   route_type: (value) => toRouteType(value.route_type),
   geopath: (value) => (value.geopath ? JSON.stringify(value.geopath) : null),
+  directions: (value, args, ctx) => {
+    return ctx.loaders.directionsForRoute.load(value.route_id!.toString())
+  },
   stops: async (value, args, ctx) => {
-    const { data: directions } = await ctx.client.v3.directionsForRoute(
-      value.route_id!
-    )
-
-    if (!directions) return []
-
-    const response = await ctx.client.v3.stopsStopsForRoute(
+    const { data: stops } = await ctx.client.v3.stopsStopsForRoute(
       value.route_id!,
-      value.route_type as any,
-      {
-        direction_id: directions.directions?.[0].direction_id,
-      }
+      value.route_type as any
     )
+    if (!stops.stops) return []
 
-    if (!response.data.stops) return []
-
-    return sortWith([ascend((x) => x.stop_sequence ?? 0)], response.data.stops)
+    return stops.stops.map((stop) => ({
+      stop: stop,
+      route: value,
+    }))
   },
 }

@@ -6,28 +6,26 @@ export type RunResolveValue = V3Run
 
 export const Run: RunResolvers = {
   id: (value) => {
+    if (value.run_ref) {
+      return value.run_ref
+    }
     if (value.run_id === undefined) {
       throw new Error("run_id is undefined")
-    }
-    if (value.run_id === -1) {
-      return value.run_ref!.toString()
     }
     return value.run_id.toString()
   },
   destination_name: (value) => value.destination_name!,
   express_stop_count: (value) => value.express_stop_count,
-  final_stop: (value, args, context) => {
-    // TODO
-    return null!
+  final_stop: async (value, args, ctx) => {
+    const { stop } = await ctx.loaders.stops.load(
+      value.final_stop_id!.toString()
+    )
+    return stop
   },
   geopath: (value) => (value.geopath ? JSON.stringify(value.geopath) : null),
-  interchange: (value) => {
-    // TODO
-    return null
-  },
-  route: (value, args, context) => {
-    // TODO
-    return null!
+  route: async (value, args, ctx) => {
+    const { route } = await ctx.loaders.routes.load(value.route_id!.toString())
+    return route
   },
   route_type: (value) => toRouteType(value.route_type),
   run_sequence: (value) => value.run_sequence,
