@@ -4,6 +4,7 @@ schema:
 documents:
   - 'app/**/*.ts'
   - 'app/**/*.tsx'
+  - 'components/**/*.tsx'
 
 generates:
   lib/graph/__generated__/resolvers.ts:

@@ -45,7 +45,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={networkSans.className}>
-      <body>{children}</body>
+      <body>
+        <main>
+          <div className="container mx-auto max-w-lg px-2">{children}</div>
+        </main>
+      </body>
     </html>
   )
 }

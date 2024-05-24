@@ -1,6 +1,6 @@
 import { V3Run } from "@/lib/ptv/client"
 import { RunResolvers } from "../../__generated__/resolvers"
-import { toRouteType } from "../route/route-type"
+import { toRouteType } from "../../util/route-type"
 
 export type RunResolveValue = V3Run
 

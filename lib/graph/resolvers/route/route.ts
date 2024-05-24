@@ -1,6 +1,6 @@
 import { V3RouteWithStatus } from "@/lib/ptv/client"
 import { RouteResolvers } from "../../__generated__/resolvers"
-import { toRouteType } from "./route-type"
+import { toRouteType } from "../../util/route-type"
 
 export type RouteResolveValue = V3RouteWithStatus
 

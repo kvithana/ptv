@@ -1,5 +1,5 @@
 import { QueryResolvers } from "@/lib/graph/__generated__/resolvers"
-import { fromRouteType } from "../../route/route-type"
+import { fromRouteType } from "../../../util/route-type"
 
 export const stop: QueryResolvers["stop"] = async (value, args, ctx) => {
   const response = await ctx.loaders.stops.load(

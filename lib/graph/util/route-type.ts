@@ -1,4 +1,4 @@
-import { RouteType } from "../../__generated__/resolvers"
+import { RouteType } from "../__generated__/resolvers"
 
 export function toRouteType(number?: number): RouteType | null {
   if (number === undefined) {

@@ -1,6 +1,6 @@
 import { QueryResolvers } from "@/lib/graph/__generated__/resolvers"
 import { V3DeparturesResponse } from "@/lib/ptv/client"
-import { fromRouteType } from "../../route/route-type"
+import { fromRouteType } from "../../../util/route-type"
 import { DepartureResolveValue } from "../departure"
 
 export const departures: QueryResolvers["departures"] = async (
