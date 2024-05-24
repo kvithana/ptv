@@ -32,6 +32,9 @@ dependencies:
   graphql-request:
     specifier: ^7.0.1
     version: 7.0.1(graphql@16.8.1)
+  graphql-tag:
+    specifier: ^2.12.6
+    version: 2.12.6(graphql@16.8.1)
   idb-keyval:
     specifier: ^6.2.1
     version: 6.2.1
@@ -4220,7 +4223,6 @@ packages:
     dependencies:
       graphql: 16.8.1
       tslib: 2.6.2
-    dev: true
 
   /graphql-ws@5.16.0(graphql@16.8.1):
     resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}

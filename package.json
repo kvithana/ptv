@@ -24,6 +24,7 @@
     "fuse.js": "^7.0.0",
     "graphql": "^16.8.1",
     "graphql-request": "^7.0.1",
+    "graphql-tag": "^2.12.6",
     "idb-keyval": "^6.2.1",
     "next": "14.2.3",
     "p-limit": "^4.0.0",
