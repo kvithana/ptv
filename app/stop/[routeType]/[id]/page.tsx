@@ -1,9 +1,6 @@
-import { fetcher } from "@/lib/graph/client"
 import { gql } from "graphql-request"
 
 export default async function Home() {
-  const data = await fetcher()
-
   return (
     <div>
       <h1>Stop</h1>
