@@ -18,8 +18,15 @@ export const Route: RouteResolvers = {
       : null,
   route_type: (value) => toRouteType(value.route_type),
   geopath: (value) => (value.geopath ? JSON.stringify(value.geopath) : null),
-  directions: (value, args, ctx) => {
-    return ctx.loaders.directionsForRoute.load(value.route_id!.toString())
+  directions: async (value, args, ctx) => {
+    const data = await ctx.loaders.directionsForRoute.load(
+      value.route_id!.toString()
+    )
+
+    return data.map((direction) => ({
+      direction,
+      route: value,
+    }))
   },
   stops: async (value, args, ctx) => {
     const { data: stops } = await ctx.client.v3.stopsStopsForRoute(
