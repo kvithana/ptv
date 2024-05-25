@@ -1,5 +1,5 @@
 import { RouteType } from "@/app/__generated__/types"
-import { RoutesLoader } from "@/components/departures/routes-loader"
+import { RoutesLoader } from "@/components/routes/routes-loader"
 import { fetcher } from "@/lib/graph/client"
 import { gql } from "graphql-request"
 import { ServerStopQueryDocument } from "./__generated__/page.generated"

@@ -1,5 +1,6 @@
 import { TypedDocumentNode } from "@graphql-typed-document-node/core"
 import { GraphQLClient, Variables } from "graphql-request"
+import useSWR, { SWRConfiguration } from "swr"
 
 const GRAPHQL_API_URL = new URL(
   "/api/graphql",
@@ -9,8 +10,8 @@ const GRAPHQL_API_URL = new URL(
 export const client = new GraphQLClient(GRAPHQL_API_URL.href)
 
 export function fetcher<T, U>(
-  query: TypedDocumentNode<T, U>,
-  variables: U | (() => U)
+  query: TypedDocumentNode<T, U> | [TypedDocumentNode<T, U>, U | (() => U)],
+  variables?: U | (() => U)
 ) {
   let q: TypedDocumentNode<T, U>
   let v: U | (() => U)
@@ -20,7 +21,21 @@ export function fetcher<T, U>(
     v = _v instanceof Function ? _v() : _v
   } else {
     q = query
-    v = variables instanceof Function ? variables() : variables
+    if (variables) {
+      v = variables instanceof Function ? variables() : variables
+    } else {
+      v = {} as U
+    }
   }
   return client.request<T>(q, v as Variables)
+}
+
+export function useQuery<T, U>(
+  query: TypedDocumentNode<T, U> | [TypedDocumentNode<T, U>, U | (() => U)],
+  variables?: U | (() => U),
+  config?: SWRConfiguration<T>
+) {
+  return useSWR<T>([query, variables], fetcher, {
+    ...config,
+  })
 }

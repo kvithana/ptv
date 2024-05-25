@@ -18,7 +18,7 @@ export const Run: RunResolvers = {
   express_stop_count: (value) => value.express_stop_count,
   final_stop: async (value, args, ctx) => {
     const { stop } = await ctx.loaders.stops.load(
-      value.final_stop_id!.toString()
+      [value.final_stop_id!.toString(), value.route_type].join(":")
     )
     return stop
   },
