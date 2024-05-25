@@ -1,6 +1,5 @@
 import { TypedDocumentNode } from "@graphql-typed-document-node/core"
 import { GraphQLClient, Variables } from "graphql-request"
-import useSWR, { SWRConfiguration } from "swr"
 
 const GRAPHQL_API_URL = new URL(
   "/api/graphql",
@@ -28,14 +27,4 @@ export function fetcher<T, U>(
     }
   }
   return client.request<T>(q, v as Variables)
-}
-
-export function useQuery<T, U>(
-  query: TypedDocumentNode<T, U> | [TypedDocumentNode<T, U>, U | (() => U)],
-  variables?: U | (() => U),
-  config?: SWRConfiguration<T>
-) {
-  return useSWR<T>([query, variables], fetcher, {
-    ...config,
-  })
 }

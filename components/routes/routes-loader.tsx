@@ -1,7 +1,8 @@
 "use client"
 
 import { RouteType } from "@/app/__generated__/types"
-import { useQuery } from "@/lib/graph/client"
+
+import { useQuery } from "@/lib/hooks/use-query"
 import { gql } from "graphql-request"
 import { RouteLoaderQueryDocument } from "./__generated__/routes-loader.generated"
 import { RouteStop } from "./route-stop"
