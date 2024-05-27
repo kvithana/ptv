@@ -17,6 +17,7 @@
   "dependencies": {
     "@apollo/server": "^4.10.4",
     "@as-integrations/next": "^3.0.0",
+    "@escape.tech/graphql-armor": "^3.0.0",
     "@graphql-tools/schema": "^10.0.3",
     "@vercel/kv": "^1.0.1",
     "dataloader": "^2.2.2",
