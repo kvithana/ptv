@@ -7,7 +7,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "*", // Set your origin
+            value: "ptv.kal.im",
           },
           {
             key: "Access-Control-Allow-Methods",
