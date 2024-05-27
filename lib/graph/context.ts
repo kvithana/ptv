@@ -7,7 +7,7 @@ export type Context = {
   loaders: Loaders
 }
 
-export function createContext(req: NextRequest): Context {
+export function createContext(req?: NextRequest): Context {
   return {
     client: getPTVClient(),
     loaders: createLoaders(),

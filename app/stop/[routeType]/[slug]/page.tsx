@@ -1,6 +1,6 @@
 import { RouteType } from "@/app/__generated__/types"
 import { RoutesLoader } from "@/components/routes/routes-loader"
-import { fetcher } from "@/lib/graph/client"
+import { useServerQuery } from "@/lib/hooks/use-server-query"
 import { gql } from "graphql-request"
 import { ServerStopQueryDocument } from "./__generated__/page.generated"
 
@@ -13,10 +13,14 @@ export default async function Home({
   }
 }) {
   const [id] = params.slug.split("-")
-  const data = await fetcher(ServerStopQueryDocument, {
+  const { data } = await useServerQuery(ServerStopQueryDocument, {
     id: id,
     routeType: params.routeType as RouteType,
   })
+
+  if (!data) {
+    throw new Error("No data")
+  }
 
   const stop = data.stop
 
