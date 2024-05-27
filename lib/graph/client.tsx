@@ -3,7 +3,7 @@ import { GraphQLClient, Variables } from "graphql-request"
 
 const GRAPHQL_API_URL = new URL(
   "/api/graphql",
-  process.env.DEPLOYMENT_BASEPATH || "http://localhost:3000"
+  process.env.NEXT_PUBLIC_DEPLOYMENT_BASEPATH || "http://localhost:3000"
 )
 
 export const client = new GraphQLClient(GRAPHQL_API_URL.href)
