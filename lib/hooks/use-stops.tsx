@@ -6,7 +6,12 @@ export function useStops() {
   const [stops, setStops] = useState<SimplifiedStop[] | null>(null)
 
   async function fetchStops() {
-    const response = await fetch("/api/stops", {
+    const url = new URL(
+      "/api/stops",
+      process.env.NEXT_PUBLIC_DEPLOYMENT_BASEPATH ?? window.location.origin
+    )
+
+    const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
