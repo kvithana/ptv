@@ -1,10 +1,14 @@
 import { gql } from "graphql-request"
 import { useMemo } from "react"
-import { RouteStopComponentFragment } from "./__generated__/route-stop.generated"
+import { RouteStopComponent_RouteStopFragment } from "./__generated__/route-stop.generated"
 import { RoutePill } from "./route-pill"
 import { RouteStopDeparture } from "./route-stop-departure"
 
-export function RouteStop({ data }: { data: RouteStopComponentFragment }) {
+export function RouteStop({
+  data,
+}: {
+  data: RouteStopComponent_RouteStopFragment
+}) {
   const validDirections = useMemo(
     () => data.directions?.filter((direction) => direction.departures?.length),
     [data]
