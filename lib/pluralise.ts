@@ -3,5 +3,5 @@ export function pluralise(
   singular: string,
   plural?: string
 ): string {
-  return count + " " + (count === 1 ? singular : singular + "s")
+  return count + " " + (count === 1 ? singular : plural ?? singular + "s")
 }

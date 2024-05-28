@@ -34,7 +34,7 @@ export function RouteStop({ data }: { data: RouteStopComponentFragment }) {
 }
 
 gql`
-  fragment RouteStopComponent on RouteStop {
+  fragment RouteStopComponent_RouteStop on RouteStop {
     route {
       id
       route_type

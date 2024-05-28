@@ -41,7 +41,7 @@ gql`
       stop_name
       stop_suburb
       routes {
-        ...RouteStopComponent
+        ...RouteStopComponent_RouteStop
       }
     }
   }

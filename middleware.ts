@@ -22,11 +22,9 @@ export default function middleware(req: NextRequest) {
     return NextResponse.json({}, { headers: preflightHeaders })
   }
 
-  if (!allowedOrigins.includes(origin || "")) {
-    return NextResponse.json({ message: "Forbidden" }, { status: 403 })
-  }
-
   const response = NextResponse.next()
+
+  console.log("origin", origin)
 
   if (isAllowedOrigin) {
     response.headers.set("Access-Control-Allow-Origin", origin)
