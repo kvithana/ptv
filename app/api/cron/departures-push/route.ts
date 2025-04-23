@@ -24,13 +24,20 @@ export async function GET(request: Request) {
 
         const data = await response.json();
 
+        // Format data for TRMNL using merge_variables structure
+        const trmnlPayload = {
+            merge_variables: {
+                data
+            }
+        };
+
         // Push data to the TRMNL endpoint
         const trmnlResponse = await fetch(TRMNL_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(trmnlPayload),
         });
 
         if (!trmnlResponse.ok) {
