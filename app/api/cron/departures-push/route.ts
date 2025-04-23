@@ -5,7 +5,7 @@ const TRMNL_ENDPOINT = process.env.TRMNL_ENDPOINT || '';
 export async function GET(request: Request) {
     try {
         // Create URL for the internal API route
-        const url = new URL('/api/departures', process.env.VERCEL_URL || 'http://localhost:3000');
+        const url = new URL('/api/departures', process.env.NEXT_PUBLIC_DEPLOYMENT_BASEPATH || 'http://localhost:3000');
         url.searchParams.append('stop_id', '1075');
         url.searchParams.append('route_type', 'train');
         url.searchParams.append('route_id', '7');
