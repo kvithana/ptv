@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { RouteType, getPTVClient } from "@/lib/ptv";
 import { formatInTimeZone } from "date-fns-tz";
+import { parseISO } from "date-fns";
 
 export interface Departure {
     service_name: string;
@@ -38,7 +39,7 @@ interface RouteObject {
 function formatTimeForDisplay(isoTime: string): string {
     // Using date-fns-tz to ensure correct timezone (Melbourne/Australia)
     return formatInTimeZone(
-        new Date(isoTime),
+        parseISO(isoTime),
         "Australia/Melbourne",
         "HH:mm"
     );
@@ -114,7 +115,7 @@ export async function GET(request: NextRequest) {
                 {
                     direction_id: directionId ? parseInt(directionId) : undefined,
                     max_results: parseInt(maxResults),
-                    include_cancelled: true,
+                    include_cancelled: false,
                     expand: ["All"], // Use "All" to expand all objects
                 }
             );
@@ -126,7 +127,7 @@ export async function GET(request: NextRequest) {
                 {
                     direction_id: directionId ? parseInt(directionId) : undefined,
                     max_results: parseInt(maxResults),
-                    include_cancelled: true,
+                    include_cancelled: false,
                     expand: ["All"], // Use "All" to expand all objects
                 }
             );
