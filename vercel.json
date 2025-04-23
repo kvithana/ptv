@@ -3,11 +3,5 @@
     "app/api/**/*": {
       "maxDuration": 10
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/departures-push",
-      "schedule": "*/2 * * * *"
-    }
-  ]
+  }
 }

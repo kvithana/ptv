@@ -45,6 +45,10 @@ function formatTimeForDisplay(isoTime: string): string {
     );
 }
 
+// Add export for config to disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
     // Extract parameters from URL
     const searchParams = request.nextUrl.searchParams;
