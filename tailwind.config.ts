@@ -18,6 +18,13 @@ const config: Config = {
         "warm-grey": "rgb(var(--color-ptv-warm-grey) / <alpha-value>)",
         disruptions: "rgb(var(--color-ptv-disruptions) / <alpha-value>)",
         myki: "rgb(var(--color-ptv-myki) / <alpha-value>)",
+        // Digital display colors
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        display: "rgb(var(--color-display) / <alpha-value>)",
+        "text-primary": "rgb(var(--color-text-primary) / <alpha-value>)",
+        "text-secondary": "rgb(var(--color-text-secondary) / <alpha-value>)",
+        divider: "rgb(var(--color-divider) / <alpha-value>)",
+        input: "rgb(var(--color-input) / <alpha-value>)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -28,6 +35,7 @@ const config: Config = {
     fontFamily: {
       sans: ["Network Sans", "cursive"],
       serif: ["Network Sans", "cursive"],
+      mono: ["Consolas", "Monaco", "monospace"],
     },
   },
   plugins: [],

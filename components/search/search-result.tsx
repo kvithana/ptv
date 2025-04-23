@@ -8,38 +8,51 @@ export function SearchResult({ entry }: { entry: SimplifiedStop }) {
   const color = routeTypeColor(entry.routes[0].route_type)
 
   return (
-    <Link
-      href={buildStopRoute(entry.routes[0].route_type, entry)}
-      prefetch={false}
-    >
-      <div className="flex items-center justify-between py-4 border-b border-gray-200 overflow-hidden">
-        <div>
-          <h2 className="text-lg font-semibold">{entry.stop_name}</h2>
-          <p className="text-sm text-gray-500">{entry.stop_suburb}</p>
+    <div className="display-row">
+      <Link
+        href={buildStopRoute(entry.routes[0].route_type, entry)}
+        prefetch={false}
+        className="block py-3 hover:bg-display/30"
+      >
+        <div className="flex flex-col">
+          <div className="w-full">
+            <h2 className="text-lg font-bold text-text-primary">
+              {entry.stop_name}
+            </h2>
+            <p className="text-sm text-text-secondary">{entry.stop_suburb}</p>
 
-          <div className="hidden bg-train bg-bus bg-vline bg-tram" />
-          <div className="flex mt-2 w-full overflow-hidden">
-            <Marquee
-              gradient={false}
-              play={
-                entry.routes.length > 1 &&
-                entry.routes.map((stop) => stop.route_name).join(" ").length >
-                  30
-              }
-              speed={20}
-            >
-              {entry.routes.map((route) => (
-                <div
-                  key={route.route_id}
-                  className={`rounded-full px-4 py-1 text-xs text-nowrap font-semibold mr-2 ${color} text-white`}
-                >
-                  {route.route_name}
-                </div>
-              ))}
-            </Marquee>
+            <div className="hidden bg-train bg-bus bg-vline bg-tram" />
+            <div className="flex mt-3 w-full overflow-hidden">
+              <Marquee
+                gradient={false}
+                play={
+                  entry.routes.length > 1 &&
+                  entry.routes.map((stop) => stop.route_name).join(" ").length >
+                    30
+                }
+                speed={20}
+              >
+                {entry.routes.map((route) => (
+                  <div
+                    key={route.route_id}
+                    className={`ptv-pill mr-2 ${color}`}
+                  >
+                    {route.route_name}
+                  </div>
+                ))}
+              </Marquee>
+            </div>
           </div>
         </div>
+      </Link>
+      <div className="flex justify-end mt-1 mb-2">
+        <Link
+          href={`/departures?stopId=${entry.stop_id}&routeType=${entry.routes[0].route_type}`}
+          className="text-xs text-text-secondary hover:text-text-primary"
+        >
+          View all departures
+        </Link>
       </div>
-    </Link>
+    </div>
   )
 }

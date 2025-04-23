@@ -13,7 +13,7 @@ export function RouteStopDeparture({
     } | null
     platform_number?: string | null
   }
-  routePill: React.ReactNode
+  routePill?: React.ReactNode
 }) {
   const departureTime =
     departure.estimated_departure_utc || departure.scheduled_departure_utc
@@ -23,23 +23,35 @@ export function RouteStopDeparture({
   const scheduledTime = departureTime
     ? format(parseISO(departureTime), "h:mm a")
     : "N/A"
+
+  // Calculate if train is coming soon (within 5 minutes)
+  const isComingSoon =
+    timeUntilDeparture !== "N/A" &&
+    !timeUntilDeparture.includes("hr") &&
+    parseInt(timeUntilDeparture.split(" ")[0]) <= 5
+
   return (
-    <div className="mt-4 border-b pb-4">
-      <div className="flex items-center">
-        <div className="flex-grow text-black">
-          To {departure.run?.destination_name}
+    <div className="py-2">
+      <div className="flex items-center justify-between">
+        <div className="flex-grow next-service">
+          {departure.run?.destination_name}
         </div>
-        <div className="text-gray-500">{timeUntilDeparture}</div>
+        <div
+          className={`station-time ${
+            isComingSoon ? "text-tram" : "text-text-primary"
+          }`}
+        >
+          {scheduledTime}
+        </div>
       </div>
       <div className="flex items-center justify-between">
-        <div className="text-sm text-mid-grey">
-          Scheduled{" "}
-          <span className="font-bold text-black">{scheduledTime}</span>{" "}
-          <span>
-            {departure.platform_number
-              ? `Platform ${departure.platform_number}`
-              : ""}
-          </span>
+        <div className="text-sm min-remaining">
+          {timeUntilDeparture}{" "}
+          {departure.platform_number && (
+            <span className="platform-indicator text-xs">
+              Platform {departure.platform_number}
+            </span>
+          )}
         </div>
         {routePill}
       </div>

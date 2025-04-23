@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
+import { Header } from "@/components/header"
 
 import "./globals.css"
 
@@ -45,9 +46,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={networkSans.className}>
-      <body>
-        <main>
-          <div className="container mx-auto max-w-lg px-2">{children}</div>
+      <body className="min-h-screen bg-background text-text-primary antialiased">
+        <Header />
+        <main className="py-6">
+          <div className="container mx-auto max-w-2xl px-2 led-text">
+            {children}
+          </div>
         </main>
       </body>
     </html>

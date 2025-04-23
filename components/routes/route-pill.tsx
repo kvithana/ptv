@@ -10,42 +10,45 @@ export function RoutePill({
   }
 }) {
   const { route_name, route_type, route_number } = route
+
+  // Use route number for display if available (especially for trams)
+  const displayText = route_number || route_name
+
   if (route_type === RouteType.train) {
     return (
-      <div className="rounded-full px-4 py-1 text-xs text-nowrap font-semibold bg-train text-white">
-        <span>{route_name}</span>
+      <div className="rounded-lg px-3 py-1 text-sm font-semibold bg-train text-white inline-block">
+        {displayText}
       </div>
     )
   }
 
   if (route_type === RouteType.bus) {
     return (
-      <div className="rounded-full px-4 py-1 text-xs text-nowrap font-semibold bg-bus text-white">
-        <span>{route_name}</span>
+      <div className="rounded-lg px-3 py-1 text-sm font-semibold bg-bus text-white inline-block">
+        {displayText}
       </div>
     )
   }
 
   if (route_type === RouteType.tram) {
-    //TODO support different coloured routes
     return (
-      <div className="rounded-full px-4 py-1 text-xs text-nowrap font-semibold bg-tram text-white">
-        <span>{route_number ?? route_name}</span>
+      <div className="rounded-lg px-3 py-1 text-sm font-semibold bg-tram text-white inline-block">
+        {displayText}
       </div>
     )
   }
 
   if (route_type === RouteType.vline) {
     return (
-      <div className="rounded-full px-4 py-1 text-xs text-nowrap font-semibold bg-vline text-white">
-        <span>{route_name}</span>
+      <div className="rounded-lg px-3 py-1 text-sm font-semibold bg-vline text-white inline-block">
+        {displayText}
       </div>
     )
   }
 
   return (
-    <div className="rounded-full px-4 py-1 text-xs text-nowrap font-semibold bg-mid-grey text-white">
-      <span>{route_name}</span>
+    <div className="rounded-lg px-3 py-1 text-sm font-semibold bg-mid-grey text-white inline-block">
+      {displayText}
     </div>
   )
 }
