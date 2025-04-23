@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { RouteType, getPTVClient } from "@/lib/ptv";
+import { formatInTimeZone } from "date-fns-tz";
 
 export interface Departure {
     service_name: string;
@@ -33,14 +34,14 @@ interface RouteObject {
     route_type?: number;
 }
 
-// The time format should be easy to read on an e-ink display
+// Format time for display in Melbourne timezone
 function formatTimeForDisplay(isoTime: string): string {
-    const date = new Date(isoTime);
-    return date.toLocaleTimeString("en-AU", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-    });
+    // Using date-fns-tz to ensure correct timezone (Melbourne/Australia)
+    return formatInTimeZone(
+        new Date(isoTime),
+        "Australia/Melbourne",
+        "HH:mm"
+    );
 }
 
 export async function GET(request: NextRequest) {
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
     const routeTypeParam = searchParams.get("route_type");
     const routeId = searchParams.get("route_id");
     const directionId = searchParams.get("direction_id");
-    const maxResults = searchParams.get("max_results") || "10"; // Increased to 10 to ensure we have enough results after filtering
+    const maxResults = searchParams.get("max_results") || "5"; // Default to 5 departures
 
     // Validate required parameters
     if (!stopId || !routeTypeParam) {
@@ -104,13 +105,6 @@ export async function GET(request: NextRequest) {
         const client = getPTVClient();
         let response;
 
-        // Get the current date and time
-        const now = new Date();
-
-        // Create a date object for the next 2 hours to limit results to upcoming departures
-        const lookAheadTime = new Date(now);
-        lookAheadTime.setHours(lookAheadTime.getHours() + 2);
-
         if (routeId) {
             // Get departures for specific route
             response = await client.v3.departuresGetForStopAndRoute(
@@ -120,11 +114,8 @@ export async function GET(request: NextRequest) {
                 {
                     direction_id: directionId ? parseInt(directionId) : undefined,
                     max_results: parseInt(maxResults),
-                    include_cancelled: false, // Exclude cancelled services
+                    include_cancelled: true,
                     expand: ["All"], // Use "All" to expand all objects
-                    // Define time window to get upcoming departures
-                    date_utc: now.toISOString(),
-                    look_backwards: false, // Only look forward in time
                 }
             );
         } else {
@@ -135,11 +126,8 @@ export async function GET(request: NextRequest) {
                 {
                     direction_id: directionId ? parseInt(directionId) : undefined,
                     max_results: parseInt(maxResults),
-                    include_cancelled: false, // Exclude cancelled services
+                    include_cancelled: true,
                     expand: ["All"], // Use "All" to expand all objects
-                    // Define time window to get upcoming departures
-                    date_utc: now.toISOString(),
-                    look_backwards: false, // Only look forward in time
                 }
             );
         }
@@ -167,17 +155,7 @@ export async function GET(request: NextRequest) {
 
         // Simplify the departure data for e-ink display
         const departures = response.data.departures || [];
-
-        // Filter for only upcoming departures (departures after current time)
-        const upcomingDepartures = departures.filter(departure => {
-            const departureTime = departure.estimated_departure_utc || departure.scheduled_departure_utc;
-            if (!departureTime) return false;
-
-            const departureDate = new Date(departureTime);
-            return departureDate >= now;
-        });
-
-        upcomingDepartures.forEach((departure) => {
+        departures.forEach((departure) => {
             const routeId = departure.route_id?.toString() || "";
             const runId = departure.run_id?.toString() || "";
             const directionId = departure.direction_id?.toString() || "";
@@ -229,7 +207,7 @@ export async function GET(request: NextRequest) {
                 status = "Cancelled";
             }
 
-            // Format times
+            // Format times with Melbourne timezone
             const scheduledTime = departure.scheduled_departure_utc
                 ? formatTimeForDisplay(departure.scheduled_departure_utc)
                 : "Unknown";
@@ -238,12 +216,9 @@ export async function GET(request: NextRequest) {
                 ? formatTimeForDisplay(departure.estimated_departure_utc)
                 : undefined;
 
-            // Add service name from direction info
-            const serviceName = direction?.direction_name || "Unknown";
-
             // Create the simplified departure
             const simplifiedDeparture: Departure = {
-                service_name: serviceName,
+                service_name: direction?.direction_name || "Unknown",
                 platform: departure.platform_number,
                 scheduled_departure_time: scheduledTime,
                 estimated_departure_time: estimatedTime,
@@ -261,11 +236,6 @@ export async function GET(request: NextRequest) {
 
         routeDeparturesMap.forEach((data, key) => {
             const { routeInfo, directionInfo, departures, disruptions } = data;
-
-            // Skip if no upcoming departures
-            if (departures.length === 0) {
-                return;
-            }
 
             // Sort departures by time
             departures.sort((a, b) => {
@@ -291,18 +261,17 @@ export async function GET(request: NextRequest) {
             });
         });
 
-        // Sort routes by next departure time
+        // Sort routes by route number/name
         routesWithDepartures.sort((a, b) => {
-            if (a.departures.length === 0) return 1;
-            if (b.departures.length === 0) return -1;
-
-            return a.departures[0].departure_time.localeCompare(b.departures[0].departure_time);
+            const routeNumA = a.route_number || '';
+            const routeNumB = b.route_number || '';
+            return routeNumA.localeCompare(routeNumB);
         });
 
         return new Response(JSON.stringify(routesWithDepartures), {
             headers: {
                 "content-type": "application/json",
-                "cache-control": "public, s-maxage=30, stale-while-revalidate=15", // Reduced cache time for real-time data
+                "cache-control": "public, s-maxage=60, stale-while-revalidate=30",
             },
         });
     } catch (error) {
