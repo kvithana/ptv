@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 
 const TRMNL_ENDPOINT = process.env.TRMNL_ENDPOINT || '';
 
+// Add export for config to disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(request: Request) {
     try {
         // Create URL for the internal API route
@@ -16,6 +20,7 @@ export async function GET(request: Request) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            cache: 'no-store',  // Prevent caching the fetch request
         });
 
         if (!response.ok) {
@@ -38,29 +43,48 @@ export async function GET(request: Request) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(trmnlPayload),
+            cache: 'no-store',  // Prevent caching the fetch request
         });
 
         if (!trmnlResponse.ok) {
             throw new Error(`Failed to push data to TRMNL: ${trmnlResponse.status} ${trmnlResponse.statusText}`);
         }
 
-        // Return success response
-        return NextResponse.json({
-            success: true,
-            message: 'Successfully pushed departure data to TRMNL',
-            timestamp: new Date().toISOString(),
-        });
+        // Return success response with cache control headers
+        return NextResponse.json(
+            {
+                success: true,
+                message: 'Successfully pushed departure data to TRMNL',
+                timestamp: new Date().toISOString(),
+            },
+            {
+                headers: {
+                    'Cache-Control': 'no-store, max-age=0, must-revalidate',
+                    'Surrogate-Control': 'no-store',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                }
+            }
+        );
     } catch (error) {
         console.error('Cron job error:', error);
 
-        // Return error response
+        // Return error response with cache control headers
         return NextResponse.json(
             {
                 success: false,
                 error: error instanceof Error ? error.message : 'Unknown error occurred',
                 timestamp: new Date().toISOString(),
             },
-            { status: 500 }
+            {
+                status: 500,
+                headers: {
+                    'Cache-Control': 'no-store, max-age=0, must-revalidate',
+                    'Surrogate-Control': 'no-store',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                }
+            }
         );
     }
 } 
