@@ -8,6 +8,7 @@ import {
     processAllDepartures
 } from "@/lib/departures";
 import { pipe, flatten, sort, take } from 'ramda';
+import { parseISO } from "date-fns";
 
 // Add export for config to disable caching
 export const dynamic = 'force-dynamic';
@@ -29,6 +30,7 @@ interface MultiStopParams {
         directionId?: string;
     }[];
     totalMaxResults: number;
+    referenceTime: Date;
 }
 
 /**
@@ -39,6 +41,7 @@ interface MultiStopParams {
 function parseMultiStopRequestParams(request: NextRequest): MultiStopParams | Error {
     const searchParams = request.nextUrl.searchParams;
     const totalMaxResults = parseInt(searchParams.get("total_max_results") || "50"); // Default to 50 total departures
+    const referenceTime = searchParams.get("reference_time") ? parseISO(searchParams.get("reference_time") || "") : new Date();
 
     // Parse the JSON stops parameter
     const stopsParam = searchParams.get("stops");
@@ -88,7 +91,8 @@ function parseMultiStopRequestParams(request: NextRequest): MultiStopParams | Er
 
         return {
             stops,
-            totalMaxResults
+            totalMaxResults,
+            referenceTime
         };
     } catch (error) {
         return error instanceof Error
@@ -110,14 +114,16 @@ async function fetchDeparturesForStop(
         routeId?: string;
         directionId?: string;
     },
-    maxResults: number
+    maxResults: number,
+    referenceTime: Date
 ): Promise<Departure[]> {
     const params: DepartureRequestParams = {
         stopId: stopConfig.stopId,
         routeType: stopConfig.routeType,
         routeId: stopConfig.routeId || null,
         directionId: stopConfig.directionId || null,
-        maxResults
+        maxResults,
+        referenceTime
     };
 
     try {
@@ -147,7 +153,7 @@ export async function GET(request: NextRequest) {
         // Fetch departures for each stop in parallel
         const perStopFetchLimit = 10
         const allDeparturesPromises = paramsResult.stops.map(stopConfig =>
-            fetchDeparturesForStop(stopConfig, perStopFetchLimit)
+            fetchDeparturesForStop(stopConfig, perStopFetchLimit, paramsResult.referenceTime)
         );
 
         // Wait for all requests to complete

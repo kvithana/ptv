@@ -52,6 +52,7 @@ export interface DepartureRequestParams {
     routeId?: string | null;
     directionId?: string | null;
     maxResults: number;
+    referenceTime?: Date;
 }
 
 // Multi-stop request parameters
@@ -116,6 +117,7 @@ export async function fetchDeparturesData(params: DepartureRequestParams): Promi
                 direction_id: params.directionId ? parseInt(params.directionId) : undefined,
                 max_results: params.maxResults,
                 include_cancelled: false,
+                date_utc: params.referenceTime ? params.referenceTime.toISOString() : undefined,
                 expand: ["All"], // Use "All" to expand all objects
             }
         );
@@ -130,6 +132,7 @@ export async function fetchDeparturesData(params: DepartureRequestParams): Promi
                 max_results: params.maxResults,
                 include_cancelled: false,
                 expand: ["All"], // Use "All" to expand all objects
+                date_utc: params.referenceTime ? params.referenceTime.toISOString() : undefined,
             }
         );
         return response.data;

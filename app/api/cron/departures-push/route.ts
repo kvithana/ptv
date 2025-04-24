@@ -1,3 +1,4 @@
+import { addMinutes } from 'date-fns';
 import { NextResponse } from 'next/server';
 
 const TRMNL_ENDPOINT = process.env.TRMNL_ENDPOINT || '';
@@ -19,6 +20,7 @@ export async function GET(request: Request) {
 
         // Convert stops to JSON and add as param
         url.searchParams.append('stops', JSON.stringify(STOPS));
+        url.searchParams.append('reference_time', addMinutes(new Date(), 5).toISOString());
         url.searchParams.append('total_max_results', '10');
 
         console.log(`Fetching data from: ${url.toString()}`);
