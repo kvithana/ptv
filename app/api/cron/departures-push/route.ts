@@ -6,14 +6,22 @@ const TRMNL_ENDPOINT = process.env.TRMNL_ENDPOINT || '';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+// Define the stops to query
+const STOPS = [
+    { stopId: "1075", routeId: "7", routeType: "train" },
+    { stopId: "3252", routeId: "947", routeType: "tram" }
+];
+
 export async function GET(request: Request) {
     try {
-        // Create URL for the internal API route
-        const url = new URL('/api/departures', process.env.NEXT_PUBLIC_DEPLOYMENT_BASEPATH || 'http://localhost:3000');
-        url.searchParams.append('stop_id', '1075');
-        url.searchParams.append('route_type', 'train');
-        url.searchParams.append('route_id', '7');
-        url.searchParams.append('direction_id', '1');
+        // Create URL for the multi-stop API route
+        const url = new URL('/api/departures/multi', process.env.NEXT_PUBLIC_DEPLOYMENT_BASEPATH || 'http://localhost:3000');
+
+        // Convert stops to JSON and add as param
+        url.searchParams.append('stops', JSON.stringify(STOPS));
+        url.searchParams.append('total_max_results', '10');
+
+        console.log(`Fetching data from: ${url.toString()}`);
 
         // Fetch data from the internal API route
         const response = await fetch(url.toString(), {
@@ -27,12 +35,25 @@ export async function GET(request: Request) {
             throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const departures = await response.json();
+
+        // Format data for TRMNL
+        const formattedDepartures = departures.map((departure: any) => ({
+            service: departure.service_name,
+            destination: departure.destination_name || 'Unknown',
+            route: departure.route_name || departure.route_number || 'Unknown',
+            route_type: departure.route_type,
+            platform: departure.platform || '',
+            time: departure.departure_time,
+            status: departure.status || 'Scheduled',
+        }));
 
         // Format data for TRMNL using merge_variables structure
         const trmnlPayload = {
             merge_variables: {
-                data
+                title: "Upcoming Departures",
+                subtitle: `${formattedDepartures.length} upcoming departures`,
+                departures: formattedDepartures
             }
         };
 
@@ -54,8 +75,9 @@ export async function GET(request: Request) {
         return NextResponse.json(
             {
                 success: true,
-                message: 'Successfully pushed departure data to TRMNL',
+                message: 'Successfully pushed multi-stop departure data to TRMNL',
                 timestamp: new Date().toISOString(),
+                departures: formattedDepartures
             },
             {
                 headers: {
@@ -87,4 +109,4 @@ export async function GET(request: Request) {
             }
         );
     }
-} 
+}
