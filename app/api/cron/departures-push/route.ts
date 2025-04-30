@@ -1,4 +1,5 @@
-import { addMinutes } from 'date-fns';
+import { Departure } from '@/lib/departures';
+import { addMinutes, differenceInHours, parseISO } from 'date-fns';
 import { NextResponse } from 'next/server';
 
 const TRMNL_ENDPOINT = process.env.TRMNL_ENDPOINT || '';
@@ -40,15 +41,17 @@ export async function GET(request: Request) {
         const departures = await response.json();
 
         // Format data for TRMNL
-        const formattedDepartures = departures.map((departure: any) => ({
-            service: departure.service_name,
-            destination: departure.destination_name || 'Unknown',
-            route: departure.route_name || departure.route_number || 'Unknown',
-            route_type: departure.route_type,
-            platform: departure.platform || '',
-            time: departure.departure_time,
-            status: departure.status || 'Scheduled',
-        }));
+        const formattedDepartures = departures
+            .filter((departure: Departure) => differenceInHours(parseISO(departure.scheduled_departure_time), new Date()) < 4)
+            .map((departure: Departure) => ({
+                service: departure.service_name,
+                destination: departure.destination_name || 'Unknown',
+                route: departure.route_name || departure.route_number || 'Unknown',
+                route_type: departure.route_type,
+                platform: departure.platform || '',
+                time: departure.scheduled_departure_time,
+                status: departure.status || 'Scheduled',
+            }))
 
         // Format data for TRMNL using merge_variables structure
         const trmnlPayload = {
