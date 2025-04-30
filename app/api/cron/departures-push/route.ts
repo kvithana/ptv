@@ -42,7 +42,7 @@ export async function GET(request: Request) {
 
         // Format data for TRMNL
         const formattedDepartures = departures
-            .filter((departure: Departure) => differenceInHours(parseISO(departure.scheduled_departure_time), new Date()) < 4)
+            .filter((departure: Departure) => differenceInHours(parseISO(departure.scheduled_departure_time_utc), new Date()) < 4)
             .map((departure: Departure) => ({
                 service: departure.service_name,
                 destination: departure.destination_name || 'Unknown',

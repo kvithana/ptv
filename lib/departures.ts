@@ -7,7 +7,9 @@ export interface Departure {
     service_name: string;
     platform?: string;
     scheduled_departure_time: string;
+    scheduled_departure_time_utc: string;
     estimated_departure_time?: string;
+    estimated_departure_time_utc?: string;
     departure_time: string;
     departure_time_utc?: string;
     is_real_time: boolean;
@@ -224,7 +226,9 @@ export function processAllDepartures(
             service_name: direction?.direction_name || "Unknown",
             platform: departure.platform_number,
             scheduled_departure_time: scheduledTime,
+            scheduled_departure_time_utc: departure.scheduled_departure_utc || "",
             estimated_departure_time: estimatedTime,
+            estimated_departure_time_utc: departure.estimated_departure_utc || "",
             departure_time: estimatedTime || scheduledTime,
             departure_time_utc: departure.estimated_departure_utc || departure.scheduled_departure_utc,
             is_real_time: !!departure.estimated_departure_utc,
@@ -316,6 +320,8 @@ export function processDeparture(
         departure_time: estimatedTime || scheduledTime,
         departure_time_utc: departure.estimated_departure_utc || departure.scheduled_departure_utc,
         is_real_time: !!departure.estimated_departure_utc,
+        scheduled_departure_time_utc: departure.scheduled_departure_utc || "",
+        estimated_departure_time_utc: departure.estimated_departure_utc || "",
         destination_name: run?.destination_name,
         status
     };
